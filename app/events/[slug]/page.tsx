@@ -6,9 +6,10 @@ const EventDetailsPage = ({
 }: {
   params: Promise<{ slug: string }>;
 }) => {
+  const slug = params.then((p) => p.slug);
   return (
     <Suspense fallback={<div>Loading Event...</div>}>
-      <EventDetailsContent params={params} />
+      <EventDetailsContent params={slug} />
     </Suspense>
   );
 };
