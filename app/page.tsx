@@ -1,13 +1,14 @@
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
+import { IEvent } from "@/database/event.model";
 import { events } from "@/lib/constants";
-// const event = [
-//   { image: "/images/event1.png", slug:"Event one",title: "Event 1" },
-//   { image: "/images/event2.png", title: "Event 2" },
-//   { image: "/images/event3.png", title: "Event 3" },
-// ];
+import { notFound } from "next/navigation";
 
-const Page = () => {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+const Page = async () => {
+  const response = await fetch(`${BASE_URL}/api/events`, { method: "GET" });
+  const { events } = await response.json();
+  if (!events) notFound();
   return (
     <section>
       <h1 className="text-center">
@@ -20,11 +21,13 @@ const Page = () => {
       <div className="">
         <h1>Features Events</h1>
         <ul className="events">
-          {events.map((event) => (
-            <li key={event.title}>
-              <EventCard {...event} />
-            </li>
-          ))}
+          {events &&
+            events.length > 0 &&
+            events.map((event: IEvent) => (
+              <li key={event.title}>
+                <EventCard {...event} />
+              </li>
+            ))}
         </ul>
       </div>
     </section>

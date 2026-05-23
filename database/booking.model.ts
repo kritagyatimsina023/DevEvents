@@ -23,7 +23,6 @@ const BookingSchema = new Schema<IBooking>(
       lowercase: true,
       validate: {
         validator: function (email: string) {
-          // RFC 5322 compliant email validation regex
           const emailRegex =
             /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
           return emailRegex.test(email);
@@ -51,18 +50,18 @@ BookingSchema.pre("save", async function (next) {
           `Event with ID ${booking.eventId} does not exist`,
         );
         error.name = "ValidationError";
-        return next(error);
+        // return next(error);
       }
     } catch {
       const validationError = new Error(
         "Invalid events ID format or database error",
       );
       validationError.name = "ValidationError";
-      return next(validationError);
+      // return next(validationError);
     }
   }
 
-  next();
+  // next();
 });
 
 // Create index on eventId for faster queries
