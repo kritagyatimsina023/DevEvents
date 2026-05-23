@@ -2,10 +2,13 @@ import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
 import { IEvent } from "@/database/event.model";
 import { events } from "@/lib/constants";
+import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
 const Page = async () => {
+  "use cache";
+  cacheLife("hours"); // this means nextjs will cache this 3 events (That means this Db will not be re-fetching the queries from the mongoDb until an hours)
   const response = await fetch(`${BASE_URL}/api/events`, { method: "GET" });
   const { events } = await response.json();
   if (!events) notFound();
@@ -24,7 +27,7 @@ const Page = async () => {
           {events &&
             events.length > 0 &&
             events.map((event: IEvent) => (
-              <li key={event.title}>
+              <li className="list-none" key={event.title}>
                 <EventCard {...event} />
               </li>
             ))}
